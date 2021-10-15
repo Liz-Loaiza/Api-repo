@@ -11,29 +11,36 @@ const authService ={
 
     login: async function(data){
     try {
-            const {nombreusuario, contraseña}= data;
-           // let pass = aes.encrypt(contraseña);
-            let userExists = await user.findOne({nombreusuario: nombreusuario},'nombreusuario email contraseña').exec()
-           // if(userExists)
-            if(await bcrypt.compare(contraseña, userExists.contraseña).then(res => res))
-            {
-                const token = await this.signToken(userExists.id)
-                return {
-                user: userExists,
-                code: 200,
-                token
-                }
-             } else{
-                return {
-                    code:400,
-                    error: true,
-                    msg: "Los datos de ingreso no son validos"
-                }            
-             }
-          
-        } catch (error) {
-              return error
+        const {nombreusuario, contraseña}= data;
+           
+        let userExists = await user.findOne({nombreusuario: nombreusuario},'nombreusuario email contraseña').exec()
+        if(userExists)
+        {
+        if(await bcrypt.compare(contraseña, userExists.contraseña).then(res => res))
+        {
+            const token = await this.signToken(userExists.id)
+            return {
+            user: userExists,
+            code: 200,
+            token
+            }
+         } else{
+            return {
+                code:400,
+                error: true,
+                msg: "Contraseña incorrecta"
+            }            
+         }
+        }else{
+            return {
+                code:400,
+                error: true,
+                msg: "NO existe el usuario"
+            }   
         }
+    } catch (error) {
+          return error
+    }
     },
 
     register: async function(userData){
