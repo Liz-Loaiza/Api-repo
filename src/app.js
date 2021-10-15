@@ -6,6 +6,15 @@ const indexRouter = require('./routes/index');
 const cors = require('cors');
 const path = require('path');
 
+
+app.use((req, res, next)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, ContentType, Accept");
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+    next();
+   });
+
 //configuraciones
 app.set('port', process.env.PORT || 3000);
 mongoose.connect('mongodb+srv://root:toor@marketplacecluster.alyfo.mongodb.net/Marketplace?retryWrites=true&w=majority')
